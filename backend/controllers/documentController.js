@@ -4,9 +4,12 @@ const path = require('path');
 
 const getDocuments = async (req, res) => {
   try {
+    console.log('Getting documents for user:', req.user.userId);
     const documents = await Document.find({ user: req.user.userId }).sort({ createdAt: -1 });
+    console.log('Found documents:', documents.length);
     res.json(documents);
   } catch (error) {
+    console.error('Error fetching documents:', error);
     res.status(500).json({ message: 'Error fetching documents', error: error.message });
   }
 };
@@ -33,9 +36,10 @@ const uploadDocument = async (req, res) => {
     try {
       const fileData = await fs.readFile(req.file.path);
       fileContent = fileData.toString('base64');
+      console.log('File converted to base64, length:', fileContent.length);
     } catch (error) {
       console.log('Error reading file for base64 conversion:', error);
-      // Fallback to local path for development
+      // For now, skip base64 and store empty content
       fileContent = '';
     }
     

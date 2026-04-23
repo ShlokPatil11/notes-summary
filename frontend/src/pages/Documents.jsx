@@ -84,6 +84,16 @@ export default function Documents() {
     }
   };
 
+  const handleViewDocument = async (doc) => {
+    try {
+      // For now, just show a toast since we don't have a document viewer
+      toast.success(`Document "${doc.title}" selected for viewing`);
+      // TODO: Implement document viewer or download functionality
+    } catch (error) {
+      toast.error('Failed to view document');
+    }
+  };
+
   const formatFileSize = (bytes) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -151,6 +161,7 @@ export default function Documents() {
 
                 <div className="flex justify-end space-x-2">
                   <button
+                    onClick={() => handleViewDocument(doc)}
                     className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors"
                     title="View document"
                   >
