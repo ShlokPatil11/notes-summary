@@ -29,20 +29,6 @@ const uploadDocument = async (req, res) => {
     const { title } = req.body;
     console.log('Creating document with title:', title);
     
-    // Read file and convert to base64 for production
-    const fs = require('fs').promises;
-    let fileContent = '';
-    
-    try {
-      const fileData = await fs.readFile(req.file.path);
-      fileContent = fileData.toString('base64');
-      console.log('File converted to base64, length:', fileContent.length);
-    } catch (error) {
-      console.log('Error reading file for base64 conversion:', error);
-      // For now, skip base64 and store empty content
-      fileContent = '';
-    }
-    
     const document = new Document({
       title: title || req.file.originalname,
       filename: req.file.filename,
@@ -50,7 +36,6 @@ const uploadDocument = async (req, res) => {
       filePath: req.file.path,
       fileSize: req.file.size,
       mimeType: req.file.mimetype,
-      content: fileContent, // Store base64 content
       user: req.user.userId
     });
 
