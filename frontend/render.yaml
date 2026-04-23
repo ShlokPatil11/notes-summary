@@ -1,0 +1,16 @@
+services:
+  # Static Site service
+  - type: web
+    name: cloudnotes-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: npm run build
+    publishDir: dist
+    routes:
+      - route: /*
+        directory: dist
+        file: index.html
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
