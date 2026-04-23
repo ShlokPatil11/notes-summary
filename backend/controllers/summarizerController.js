@@ -73,10 +73,21 @@ const summarizeDocument = async (req, res) => {
     let content = '';
     
     if (document.mimeType === 'text/plain' || document.originalName.endsWith('.txt')) {
-      try {
-        content = await fs.readFile(document.filePath, 'utf8');
-      } catch (error) {
-        return res.status(500).json({ message: 'Error reading file content' });
+      if (document.content && document.content.startsWith('data:') || document.content.length > 100) {
+        // Handle base64 content from production
+        try {
+          const base64Data = document.content.split(',')[1] || document.content;
+          content = Buffer.from(base64Data, 'base64').toString('utf8');
+        } catch (error) {
+          return res.status(500).json({ message: 'Error decoding base64 content' });
+        }
+      } else {
+        // Handle local file for development
+        try {
+          content = await fs.readFile(document.filePath, 'utf8');
+        } catch (error) {
+          return res.status(500).json({ message: 'Error reading file content' });
+        }
       }
     } else if (document.mimeType === 'application/pdf' || document.originalName.endsWith('.pdf')) {
       // For now, return PDFs as not supported to get basic functionality working
