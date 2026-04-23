@@ -11,10 +11,10 @@ const protect = (req, res, next) => {
     } catch (error) {
       res.status(401).json({ message: 'Not authorized, token failed' });
     }
-  }
-
-  if (!token) {
-    res.status(401).json({ message: 'Not authorized, no token' });
+  } else {
+    if (!token) {
+      res.status(401).json({ message: 'Not authorized, no token' });
+    }
   }
 };
 
